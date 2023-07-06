@@ -11,6 +11,7 @@ Usage: User inputs width,height, minimum and maximum X values for drop window, m
 // #include <functional>
 #include "particlemap.hpp"
 #include <time.h>
+#include <chrono>
 using namespace std;
 
 void dropMultipleParticles(int**,int,int);
@@ -23,12 +24,19 @@ int main(int argc,char** argv){
 	char selection;
 	cin >> selection;
 
+	auto start = chrono::high_resolution_clock::now();
+
 	ParticleMap* island = new ParticleMap();
 
 	// if(selection == '2') dropMultipleParticles(island,width,height);     		
 
 	island->displayCharMap();
 	
+	auto stop = chrono::high_resolution_clock::now();
+	auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
+
+	cout << duration.count() << endl;
+
 	delete island;
 
 	return 0;
