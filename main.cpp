@@ -6,10 +6,14 @@ Description: Creates a char island using user entered data and prints to island.
 Usage: User inputs width,height, minimum and maximum X values for drop window, minimum and maximum Y values for drop window, number of total particles to drop, max life of a single particle, and the island waterline from range (40,200)
 */
 #include <iostream>
+#include <vector>
+#include <string>
+#include <functional>
 #include <time.h>
 #include <math.h>
 using namespace std;
 
+void doInput(vector<string>&, vector<int*>&, const function<bool(vector<int*>&)>&);
 void userInputInit(int&,int&,int&,int&,int&,int&,int&,int&,int&);
 int** makeParticleMap(int,int,int,int,int,int,int,int);
 bool moveExists(int**,int,int,int,int);
@@ -82,55 +86,65 @@ int main(int argc,char** argv){
 	
 	return 0;
 }
+void doInput(vector<string>& names, vector<int*>& params, const function<bool(vector<int*>&)> & cond){
+	bool isValidInput;
+	do {
+		for(int i = 0; i < names.size(); i++){
+			cout << "Enter " << names[i] << " :" << endl;
+			cin >> *params[i];
+		}
+		isValidInput = cond(params);
+		if(isValidInput){
+			cout << "Invalid inputs, please enter values again" << endl;
+		}
+	} while(isValidInput);
+
+	cout << "Added ";
+	for(string name : names){
+		cout << name << ", ";
+	}
+	cout << endl;
+}
 void userInputInit(int &width,int &height,int &minX,int &maxX,int &minY,int &maxY,int &numParticles,int &maxLife,int &waterLine){ //asks user for input and initializes variables
 
 		//width height check:
-		do{
-		cout << "Enter width:" << endl;
-		cin >> width;
-		cout << "Enter height:" << endl;
-		cin >> height;
-		if(width <2 || height < 2){
-			cout << "Invalid width/height values,please enter values again" << endl;
-		}
-		}while(width < 2 || height < 2);
-		
+		vector<string> names = {"width", "height"};
+		vector<int*> params = {&width, &height};
+
+		doInput(names, params, [](vector<int*>& params) -> bool{ 
+			int width = *params[0], height = *params[1];
+			return width < 2 || height < 2; 
+		});
+
 		//min max check:
-		do{
-		cout << "Enter minimum x for drop window:" << endl;
-		cin >> minX;
-		cout << "Enter maximum x for drop window:" << endl;
-		cin >> maxX;
-		cout << "Enter minimum y for drop window:" << endl;
-		cin >> minY;
-		cout << "Enter maximum y for drop window:" << endl;
-		cin >> maxY;
-		if( !(minX >= 0 && minY >= 0 && maxX > minX && maxY > minY && maxY < height && maxX < width)){
-			cout << "Invalid Min/Max values, please enter the values again" << endl;	
-		}
-		}while( !(minX >= 0 && minY >= 0 && maxX > minX && maxY > minY && maxY < height && maxX < width));
+		names = {"min x", "max x", "min y", "max y"};
+		params = {&minX, &maxX, &minY, &maxY, &width, &height};
 		
+		doInput(names, params, [](vector<int*>& params) -> bool{ 
+			int minX = *params[0], maxX = *params[1], minY = *params[2], maxY = *params[3], width = *params[4], height = *params[5];
+			return !(minX >= 0 && minY >= 0 && maxX > minX && maxY > minY && maxY < height && maxX < width);
+		});
+
 		//numparticles maxlife check:
-		do{
-		cout << "Enter total number of particles to drop:" << endl;
-		cin >> numParticles;
-		cout << "Enter maximum life for a particle:" << endl;
-		cin >> maxLife;
-		if(!(numParticles > 0 ) || !(maxLife > 0 )){
-			cout << "Invalid particles/life range, please enter a new value" << endl;
-		}
-		}while(!(numParticles > 0 ) || !(maxLife > 0 ));
+		names = {"total number of particles to drop", "max life for each particle"};
+		params = {&numParticles, &maxLife};
 		
+		doInput(names, params, [](vector<int*>& params) -> bool{ 
+			int numParticles = *params[0], maxLife = *params[1];
+			return !(numParticles > 0 ) || !(maxLife > 0);
+		});
+
 		//waterline check:
-		do{
-		cout << "Enter waterline (40-200):" << endl;
-		cin >> waterLine;
-		if(waterLine < 40 || waterLine > 200){
-			cout << "Invalid waterLine range, please enter a new value" << endl;
-		}
-		}while(waterLine < 40 || waterLine > 200);
-	
+		names = {"waterline (40-200)"};
+		params = {&waterLine};
+		
+		doInput(names, params, [](vector<int*>& params) -> bool{ 
+			int waterLine = *params[0];
+			return waterLine < 40 || waterLine > 200;
+		});
+
 }
+
 int** makeParticleMap(int width,int height,int minX,int maxX,int minY,int maxY, int numParticles,int maxLife){    //creates int array of island using particles
 	int** result = new int*[height]; 				//creates island, a new pointer with a 'height' amount of pointers
 	
