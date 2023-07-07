@@ -178,25 +178,25 @@ void ParticleMap::initCharMap(){
 		*(charMap + i) = new char[width];						
 	}	
 
-	float waterLine = (float)waterLine;							
+	float waterLineF = (float)waterLine;							
 	for(int r = 0; r < height; r++){	
 		for(int c = 0; c < width; c++){
-			float landZone = map[r][c] - waterLine;				//landzone = map index value - waterline
-			float waterThreshold = waterLine * 0.5;             // 50% of water-line
+			float landZone = map[r][c] - waterLineF;				//landzone = map index value - waterline
+			float waterThreshold = waterLineF * 0.5;             // 50% of water-line
 			char toChar = ' '; 							//char to be placed at charMap[r][c]
 
 			if(landZone < waterThreshold){ 						//value < 50% of water-line
 				toChar = '#';
-			}else if(landZone > waterThreshold && landZone <= waterLine){ 		//value > 50% water-line && <= water-line
+			}else if(landZone > waterThreshold && landZone <= waterLineF){ 		//value > 50% water-line && <= water-line
 				toChar = '~';
 			}else{ 									//value > water-line &&
-				if(landZone < (waterLine + (landZone * 0.15))){ 		
+				if(landZone < (waterLineF + (landZone * 0.15))){ 		
                     //< waterLine + 15% of landzone
 					toChar = '.';
-				}else if(landZone >= (waterLine +(landZone*0.15)) && landZone < (waterLine + landZone * 0.4)){
+				}else if(landZone >= (waterLineF +(landZone*0.15)) && landZone < (waterLineF + landZone * 0.4)){
                     // >= waterline + 15% landzone && < waterline + 40% landzone
 					toChar = '-';
-				}else if(landZone >= (waterLine +(landZone*0.40)) && landZone < (waterLine + landZone * 0.8)){
+				}else if(landZone >= (waterLineF +(landZone*0.40)) && landZone < (waterLineF + landZone * 0.8)){
                     // >= waterline + 40% landzone && < waterline + 80% landzone
 					toChar = '*';
 				}else{ 

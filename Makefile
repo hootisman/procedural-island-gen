@@ -3,4 +3,4 @@ default: main.o particlemap.o
 %.o: %.cpp
 	g++ -c $< -o $@
 clean:
-	rm island.txt islandgen 
+	rm island.txt islandgen *.o
