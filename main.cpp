@@ -5,13 +5,8 @@ Date: 4/7/21
 Description: Creates a char island using user entered data and prints to island.txt; First it creates an int array using a particle roll system, which 'drops' a particle randomly on the array and spreads across until max life runs out. Then it is normalized by dividing each value with the overall maximum of the int array, each int in range (0,255); The normalized array is then converted to char, printed to console and text file.
 Usage: User inputs width,height, minimum and maximum X values for drop window, minimum and maximum Y values for drop window, number of total particles to drop, max life of a single particle, and the island waterline from range (40,200)
 */
-// #include <iostream>
-// #include <vector>
-// #include <string>
-// #include <functional>
 #include "particlemap.hpp"
 #include <time.h>
-#include <chrono>
 using namespace std;
 
 void dropMultipleParticles(int**,int,int);
@@ -24,19 +19,12 @@ int main(int argc,char** argv){
 	char selection;
 	cin >> selection;
 
-	auto start = chrono::high_resolution_clock::now();
 
 	ParticleMap* island = new ParticleMap();
 
 	// if(selection == '2') dropMultipleParticles(island,width,height);     		
 
 	island->displayCharMap();
-	
-	auto stop = chrono::high_resolution_clock::now();
-	auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
-
-	cout << duration.count() << endl;
-
 	delete island;
 
 	return 0;
